@@ -19,7 +19,8 @@
                :flag-anomaly-concern|:coordinate-supply-order
                :effect :propose :taster-id str :facility-id str
                :cost number :anomaly-type kw :item str :stake kw
-               :confidence n :rationale str}")
+               :confidence n :rationale str}"
+  (:require #?(:clj [clojure.edn :as edn] :cljs [cljs.reader :as edn])))
 
 (defprotocol Advisor
   (-advise [advisor store request] "request -> proposal map"))
@@ -79,7 +80,7 @@
 
 (defn- parse-proposal [content]
   (try
-    (let [p (read-string content)]
+    (let [p (edn/read-string content)]
       (if (map? p)
         (assoc p :effect :propose)
         {:op :unknown :effect :propose :confidence 0.0 :stake :high
