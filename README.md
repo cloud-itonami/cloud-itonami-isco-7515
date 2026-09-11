@@ -87,7 +87,7 @@ cloud-itonami-isco-7511 exist yet, confirmed via `gh api` 404 before
 this actor was scaffolded).
 
 ```bash
-clojure -M:test   # 29 tests, 64 assertions, green
+kbb -M:test   # 29 tests, 64 assertions, green
 ```
 
 This is what backs this repo's `:maturity :implemented` entry in
