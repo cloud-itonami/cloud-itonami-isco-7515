@@ -1,0 +1,44 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a sample-intake-logging and session-scheduling
+;; coordination robot handles sample-intake/batch metadata, tasting-session
+;; scheduling and tasting-supply coordination for food and beverage tasters
+;; and graders (ISCO 7515). Its physical work: carrying sample trays from
+;; intake to the tasting room, setting a case of samples on the bench, and
+;; bringing chilled samples up to tasting temperature.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-7515"
+ :cases
+ [{:id :sample-tray-to-panel
+   :kind :transport
+   :procedure "cart carries a tray of coded samples from sample intake to the tasting booths (low accel so glasses do not spill)"
+   :params {:mass-kg 35.0 :payload-kg 8.0 :v-max-mps 0.7 :a-max-mps2 0.25
+            :brake-decel-mps2 0.35 :drive-force-n 60.0 :crr 0.015
+            :cog-height-m 0.70 :support-half-length-m 0.25 :max-time-s 1200.0}
+   :sweep {:param :distance-m :values [10.0 20.0 30.0 45.0 60.0]}
+   :quantity :cycle-time-s
+   :limit {:max 60.0 :basis "estimate: samples reach the panel within a minute of release from intake"}
+   :boundary {:lo 5.0 :hi 150.0}}
+  {:id :sample-case-onto-bench
+   :kind :manipulator
+   :procedure "arm lifts a case of sample bottles from the cart onto the preparation bench"
+   :params {:l1-m 0.50 :l2-m 0.45 :m1-kg 5.0 :m2-kg 4.0
+            :from [0.50 0.05] :to [0.65 0.40] :duration-s 2.5 :steps 500}
+   :sweep {:param :payload-kg :values [1.0 3.0 5.0 8.0 12.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 60.0 :basis "estimate: continuous shoulder torque of a light collaborative arm (~5 kg class)"}
+   :boundary {:lo 0.1 :hi 30.0}}
+  {:id :sample-to-tasting-temperature
+   :kind :thermal
+   :procedure "a bottle of wine from the 4 C sample store stands in the 20 C tasting room until its centre (insulated symmetry plane) reaches 12 C; glass wall and internal convection are not modelled"
+   :params {:thickness-m 0.037 :conductivity-w-mk 0.50 :density-kg-m3 990.0 :specific-heat-j-kgk 4000.0
+            :t0-c 4.0 :t-hot-c 20.0 :h-front-w-m2k 8.0 :h-back-w-m2k 0.0 :t-back-ambient-c 20.0
+            :threshold-c 12.0 :duration-s 21600.0 :nodes 11}
+   :sweep {:param :thickness-m :values [0.005 0.01 0.02 0.037 0.05]}
+   :quantity :time-to-threshold-s
+   :limit {:max 3600.0 :basis "estimate: samples pulled from the store one hour before the session"}
+   :boundary {:lo 0.002 :hi 0.1}}]}
