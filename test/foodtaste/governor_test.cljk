@@ -1,5 +1,5 @@
 (ns foodtaste.governor-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [foodtaste.store :as store]
             [foodtaste.advisor :as advisor]
             [foodtaste.governor :as governor]))
