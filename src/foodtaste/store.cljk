@@ -1,7 +1,7 @@
 (ns foodtaste.store
   "SSoT for the ISCO-08 7515 Food and Beverage Tasters and Graders
   sample-intake-logging/session-scheduling coordination actor (itonami
-  actor pattern, ADR-2607121000 / CLAUDE.md Actors section; README's
+  actor pattern, ADR-2607121000 / AGENTS.md Actors section; README's
   'Robotics premise' — a sample-intake-logging/scheduling coordination
   robot performs sample intake/batch-identifier metadata logging,
   tasting-session scheduling and tasting-supply coordination for a
